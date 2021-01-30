@@ -8,12 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<Album> fetchAlbum() async {
-<<<<<<< HEAD
-  final response = await http.get('https://connpass.com/api/v1/title/');
-=======
   final response =
-  await http.get('https://connpass.com/api/v1/event/?keyword=python');
->>>>>>> 75c576e2dfbab75ea006b31bdc5553b47cece523
+      await http.get('https://connpass.com/api/v1/event/?keyword=python');
 
   if (response.statusCode == 200) {
     return Album.fromJson(jsonDecode(response.body));
@@ -23,17 +19,24 @@ Future<Album> fetchAlbum() async {
 }
 
 class Album {
-  final events;
-  final int eventId;
-  final String title;
+  final String resultsReturned;
+  final int resultsAvailable;
+  final int resultsStart;
+  final List events;
 
-  Album({this.events, this.eventId, this.title});
+  Album({
+    this.resultsReturned,
+    this.resultsAvailable,
+    this.resultsStart,
+    this.events,
+  });
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
-      events:
-      eventId: json['eventId'],
-      title: json['title'],
+      resultsReturned: json['results_returned'],
+      resultsAvailable: json['results_available'],
+      resultsStart: json['results_start'],
+      events: json['events'],
     );
   }
 }
@@ -72,7 +75,7 @@ class _MyAppState extends State<MyApp> {
             future: futureAlbum,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.title);
+                return Text(snapshot.data.resultsReturned);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
